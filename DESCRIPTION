@@ -1,0 +1,61 @@
+Package: crupR
+Type: Package
+Title: an R package to predict condition-specific enhancers from ChIP-seq data
+Version: 0.99.0
+Author: Authors@R: c(
+   person("Persia", "Akbari Omgba", email = "omgba@molgen.mpg.de", role = c("cre")),
+   person("Verena", "Heinrich", email = "heinrich@molgen.mpg.de", role = c("aut")),
+   person("Martin", "Vingron", email = "vingron@molgen.ppg.com", role = c("aut")))
+Maintainer: The package maintainer <omgba@molgen.mpg.de>
+Description: An R package offers a workflow to predict condition-specific enhancers from ChIP-seq data.
+    The prediction of regulatory units is done in four main Steps:
+    Step 1 is the normalization of the ChIP-seq counts.
+    Step 2 is the actual prediction of active enhancers bin-wise on the whole genome.
+    Step 3 is the condition-specific clustering of the putative active enhancers.
+    Step 4 is the search for possible target genes of the condition-specific clusters using RNA-seq counts.
+License: GPL-3
+Encoding: UTF-8
+LazyData: false
+Imports: 
+    BSgenome.Mmusculus.UCSC.mm10,
+    BSgenome.Mmusculus.UCSC.mm9,
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
+    bamsignals,
+    Rsamtools,
+    GenomicRanges,
+    preprocessCore,
+    randomForest,
+    rtracklayer,
+    GenomeInfoDb,
+    S4Vectors,
+    parallel,
+    ggplot2,
+    matrixStats,
+    dplyr,
+    IRanges,
+    GenomicAlignments,
+    GenomicFeatures,
+    TxDb.Mmusculus.UCSC.mm10.knownGene,
+    TxDb.Mmusculus.UCSC.mm9.knownGene,
+    TxDb.Hsapiens.UCSC.hg19.knownGene,
+    TxDb.Hsapiens.UCSC.hg38.knownGene,
+    BSgenome,
+    reshape2,
+    magrittr,
+    stats,
+    utils,
+    grDevices
+Depends:
+    R (>= 3.6)
+Suggests: testthat, knitr, rmarkdown
+biocViews:
+    DifferentialPeakCalling,
+    GeneTarget,
+    FunctionalPrediction,
+    HistoneModification,
+    PeakDetection
+BiocType: Software
+URL: https://github.com/VerenaHeinrich/CRUP
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr

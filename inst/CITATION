@@ -1,0 +1,15 @@
+citEntry(entry="article",
+         title = "CRUP: a comprehensive framework to predict condition-specific regulatory units",
+         author = personList( as.person("Verena Heinrich"),
+                              as.person("Anna Ramisch"),
+                              as.person("Martin Vingron")),
+         year = 2019,
+         journal = "Genome Biology",
+         doi = "10.1186/s13059-019-1860-7",
+         volume = 20,
+         issue = 1,
+         pages = 227,
+         textVersion = 
+         paste("Heinrich, V., Ramisch, A., Vingron, M.", 
+               "Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2",
+                "Genome Biology 15(12):550 (2014)" ) )
