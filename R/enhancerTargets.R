@@ -50,6 +50,7 @@ getTargets <- function(data, expr, genome, TAD.file = NULL, cutoff = 0.9, neares
   conds <- unique(metaData$condition)
   gr<- data$sumFile
   GenomeInfoDb::seqlevels(gr) <- paste0("chr", gsub("chr|Chr","", GenomeInfoDb::seqlevels(gr)))
+  GenomeInfoDb::genome(gr) <- genome
   
   IDs <- list()
   for(i in seq_along(conds)){
@@ -78,7 +79,6 @@ getTargets <- function(data, expr, genome, TAD.file = NULL, cutoff = 0.9, neares
       GenomeInfoDb::seqlevels(TAD) = paste0("chr", gsub("chr|Chr","", GenomeInfoDb::seqlevels(TAD)))
   }
   units <- get_units(gr, expr, TAD, unlist(IDs), C, cutoff, txdb, nearest)
- 
   cat(paste0('time: ', format(Sys.time() - start_time), "\n"))
   return( list("metaData" = data$metaData,  "Units" = units))
 }

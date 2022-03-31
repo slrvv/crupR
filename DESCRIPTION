@@ -2,11 +2,10 @@ Package: crupR
 Type: Package
 Title: an R package to predict condition-specific enhancers from ChIP-seq data
 Version: 0.99.0
-Author: Authors@R: c(
+Authors@R: c(
    person("Persia", "Akbari Omgba", email = "omgba@molgen.mpg.de", role = c("cre")),
-   person("Verena", "Heinrich", email = "heinrich@molgen.mpg.de", role = c("aut")),
+   person("Verena", "Laupert", email = "laupert@molgen.mpg.de", role = c("aut")),
    person("Martin", "Vingron", email = "vingron@molgen.ppg.com", role = c("aut")))
-Maintainer: The package maintainer <omgba@molgen.mpg.de>
 Description: An R package offers a workflow to predict condition-specific enhancers from ChIP-seq data.
     The prediction of regulatory units is done in four main Steps:
     Step 1 is the normalization of the ChIP-seq counts.
@@ -47,7 +46,7 @@ Imports:
     utils,
     grDevices
 Depends:
-    R (>= 3.6)
+    R (>= 4.2.0)
 Suggests: testthat, knitr, rmarkdown
 biocViews:
     DifferentialPeakCalling,
@@ -57,5 +56,5 @@ biocViews:
     PeakDetection
 BiocType: Software
 URL: https://github.com/VerenaHeinrich/CRUP
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

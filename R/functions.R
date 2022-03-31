@@ -272,9 +272,9 @@ get_ranges <- function(p, I, W, C){
 	d$start.idx <- d$end.idx - unlist(lapply(rle, function(x) x$lengths)) + 1
 	d$cluster <- unlist(lapply(rle, function(x) x$values))
         
-    for(i in seq_along(p.split)){
-        c <- levels(d$seqnames)
-        p.split[[i]] <- GenomeInfoDb::keepSeqlevels(p.split[[i]],c)}
+    #for(i in seq_along(p.split)){
+    #    c <- levels(d$seqnames)
+    #    p.split[[i]] <- GenomeInfoDb::keepSeqlevels(p.split[[i]],c, pruning.mode="tidy")}
     
 	d$start <- unlist(lapply(p.split, function(x) GenomicRanges::start(x)[d$start.idx[which(d$seqnames ==unique(GenomicRanges::seqnames(x)))]]))
 	d$end <- unlist(lapply(p.split, function(x) GenomicRanges::end(x)[d$end.idx[which(d$seqnames ==unique(GenomicRanges::seqnames(x)))]]))
@@ -487,7 +487,7 @@ get_units <- function(regions.gr, expr.gr, TAD.gr, I, C, cutoff, txdb, nearest =
       function(x) get_correlation(x, cutoff, regions.gr, expr.gr, TAD.gr, I),
       mc.cores = C)
   }else{
-      genes <- GenomicFeatures::genes(txdb)
+      suppressMessages(genes <- GenomicFeatures::genes(txdb))
       GenomeInfoDb::seqlevels(genes, pruning.mode = "coarse") = GenomeInfoDb::seqlevels(regions.gr)
       GenomeInfoDb::seqlengths(regions.gr) <- GenomeInfoDb::seqlengths(genes)
       list <- parallel::mclapply(seq(length(regions.gr)),

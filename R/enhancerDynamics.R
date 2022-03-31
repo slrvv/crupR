@@ -42,11 +42,10 @@
 #' @importFrom dplyr mutate lag filter setdiff
 #' @importFrom matrixStats rowVars colMedians colMaxs
 #' @import parallel
-#' @importFrom IRanges values
 #' @importFrom magrittr extract %>%
 #' @importFrom stats ks.test
 #' @importFrom utils combn getFromNamespace
-#' @importFrom S4Vectors queryHits subjectHits
+#' @importFrom S4Vectors queryHits subjectHits values
 #' @importFrom GenomeInfoDb keepSeqlevels
 
 getDynamics <- function(data, w_0 = 0.5, cutoff = 0.05, W = 10, C = 1){

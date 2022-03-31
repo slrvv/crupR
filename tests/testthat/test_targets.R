@@ -49,19 +49,18 @@ testthat::test_that("enhancerTargets runs as expected",{
   testthat::expect_equal(length(targets), 2)
   testthat::expect_equal(length(targets$Units), 2)
   testthat::expect_identical(colnames(GenomicRanges::mcols(targets$Units)), colnames(GenomicRanges::mcols(units_expected)))
-  testthat::expect_identical(levels(GenomicRanges::mcols(targets$Units)$CORRELATED_GENE),
-  			levels(GenomicRanges::mcols(units_expected)$CORRELATED_GENE))
+  testthat::expect_identical(as.character(GenomicRanges::mcols(targets$Units)$CORRELATED_GENE),
+  			as.character(GenomicRanges::mcols(units_expected)$CORRELATED_GENE))
 })
 
 ng_units_expected <- readRDS(system.file("extdata", "RegulatoryUnitsNearestGene.rds", package = "crupR"))
 
 testthat::test_that("Nearest Gene mode runs as expected", {
   ng_targets <- crupR::getTargets(data = dynamics, expr = expr.gr, genome = "mm10", nearest = TRUE, C = 2)
-
   testthat::expect_equal(length(ng_targets), 2)
   testthat::expect_equal(length(ng_targets$Units), 1)
   testthat::expect_identical(colnames(mcols(ng_targets$Units)), colnames(mcols(ng_units_expected)))
-  testthat::expect_identical(levels(GenomicRanges::mcols(ng_targets$Units)$NEAREST_GENE),
-  			     levels(GenomicRanges::mcols(ng_units_expected)$NEAREST_GENE))
+  testthat::expect_identical(as.character(GenomicRanges::mcols(ng_targets$Units)$NEAREST_GENE),
+  			     as.character(GenomicRanges::mcols(ng_units_expected)$NEAREST_GENE))
 })
 

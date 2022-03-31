@@ -24,7 +24,6 @@ knitr::opts_chunk$set(
     comment = "#>")
 ```
 
-
 # Overview
 
 *crupR* is a pipeline which aims to efficiently combine all its functions into a simple workflow. The main steps are:
@@ -72,11 +71,12 @@ metaData
 ```
 After creating the meta data frame, you are ready to run *crupR*.
 
+
 # Run the *crupR* pipeline
 
 ## Step 0: Normalize the ChIPseq counts
 
-*crupR* needs normalized ChIPseq counts for its prediction, so we offer an additional function to normalize the ChIPseq files beforehand. You need to normalize each ChIPseq files for each replicate of each condition, which means we need to run *crupR* twice for our example files. Please note, that *crupR* can only normalize bam files for the genomes mm9, mm10, hg19 and hg38.  
+*crupR* needs normalized ChIPseq counts for its prediction, so we offer an additional function to normalize the ChIPseq files beforehand. You need to normalize each ChIPseq files for each replicate of each condition, which means we need to run *crupR* twice for our example files. Please note, that *crupR* can only normalize bam files for the genomes mm9, mm10, hg19 and hg38 or for a costum genome (which needs to be a Seinfo objects).  
 
 ```{r}
 normalized_1 <- crupR::normalize(metaData = metaData, condition = 1, replicate = 1, genome = "mm10", 
@@ -196,13 +196,14 @@ crupR::plotSummary(clusters)
 
 The plot shows that the enhancers of condition 2 seem to be more active than the ones of condition 1 in cluster 1, while the opposite is the case for the enhancers of the second cluster. Thus, looking at the plot gave us the same information as looking at the patterns of the clusters. 
 
+
 ## Step 3: Find target genes of the condition-specific enhancer clusters
 
 The last step in the pipeline is the identification of the target genes that get regulated by the condition-specific enhancer clusters found in the previous step.
 
 
-###Gene expression counts
-For the function `getTargets(()`the output of the step before is not sufficient. *crupR* requires additionally the gene expression counts for each condition and replicate all in one GRanges object. 
+### Gene expression counts
+For the function `getTargets()`the output of the step before is not sufficient. *crupR* requires additionally the gene expression counts for each condition and replicate all in one GRanges object. 
 *crupR* offers such an expression file for the the example sets.
 
 ```{r}
@@ -216,7 +217,8 @@ expression
 ```
 Like you can see, the meta data columns include the gene IDs and the expression counts of the genes for each condition (and replicate if given). Additional meta data columns should not interfer with `getTargets(()`, however naming one of the meta data columns incorrectly will result in an error. 
 
-###Running `getTargets()`
+
+### Running `getTargets()`
 
 Looking for the enhancer targets requires - besides the gene expression counts - a .bed file containing TADs for the genome of your choice. In case mm10 is used, *crupR* provides a suitable .bed file which is also used per default for mm10 data. In this case, simply running the code below is sufficient:
 
@@ -226,17 +228,19 @@ targets <- crupR::getTargets(data=clusters, expr = expression, genome = "mm10", 
 
 In case another genome is used or a different .bed file is preferred, providing the path to the .bed file is necessary.
 
+
 ```{r}
 path_to_bed <- system.file("extdata", "mESC_mapq30_KR_all_TADs.bed", package="crupR")
 targets <- crupR::getTargets(data = clusters, expr = expression, genome = "mm10", TAD.file = path_to_bed, C = 2)
 ```
 
 #### Using the nearest genes
-Per default *cruprR* chooses the genes that are in the same TAD as the enhancer cluster as candidate genes. Then, the expression values of those candidate genes and enhancer probabilities are correlated to identify putative target genes. However, *crupR* also offers an alternative approach that uses the nearest gene as candidate gene. This approach does not require TAD regions and is convenient when those are not available for some reason.
+Per default *crupR* chooses the genes that are in the same TAD as the enhancer cluster as candidate genes. Then, the expression values of those candidate genes and enhancer probabilities are correlated to identify putative target genes. However, *crupR* also offers an alternative approach that uses the nearest gene as candidate gene. This approach does not require TAD regions and is convenient when those are not available for some reason.
+
 ```{r}
-targets_nearest <- crupR::getTargets(data=clusters, expr = expr, genome = "mm10", nearest = TRUE, C = 2)
+targets_nearest <- crupR::getTargets(data = clusters, expr = expression, genome = "mm10", nearest = TRUE, C = 2)
 ```
- 
+
  
 #### Output
 
@@ -299,6 +303,3 @@ Note that you could theoretically also use the modes "rds" and "bigWig" for the 
 ```{r sessionInfo}
 sessionInfo()
 ```
-
-
-
