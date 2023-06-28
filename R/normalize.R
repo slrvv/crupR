@@ -1,4 +1,4 @@
-#' Normalization of ChIPseq counts.
+#' Input normalization of ChIPseq counts.
 #'
 #' @param metaData A data frame containing all important information about the ChIPseq experiments, i,e. for which histone modification they were conducted, path to the file, which condition or replicate, ...
 #' @param condition The number of the condition to normalize.
@@ -48,7 +48,7 @@
 normalize <- function(metaData, condition, replicate, genome, mapq = 10, sequencing, input.free = FALSE, chroms = NULL, C = 1) {
   start_time <- Sys.time()
   cat('\n')
-  
+  #in general: comment more!!!!
   m <- metaData[which(metaData$condition == condition & metaData$replicate == replicate),]
   if(nrow(m) != 3){
     if(nrow(m) == 0) stop(paste0("The chosen combination of condition and replicate is not valid.\n There are no files for condition ", condition," replicate ", replicate))
@@ -82,7 +82,9 @@ normalize <- function(metaData, condition, replicate, genome, mapq = 10, sequenc
   gr <- get_binned_genome(genome, chr=chroms)
   bf <- Rsamtools::BamFile(bamHM[1])
   si <- GenomicRanges::seqinfo(bf)
-  if (!("chr1" %in% names(Rsamtools::scanBamHeader(bamHM[1])[[1]]$targets)))  GenomeInfoDb::seqlevelsStyle(gr) <- GenomeInfoDb::seqlevelsStyle(si)[1]
+  if (!("chr1" %in% names(Rsamtools::scanBamHeader(bamHM[1])[[1]]$targets))){ 
+    GenomeInfoDb::seqlevelsStyle(gr) <- GenomeInfoDb::seqlevelsStyle(si)[1]
+  }
   
   ##################################################################
   # get counts from ChIP-seq experiments
@@ -124,30 +126,42 @@ normalize <- function(metaData, condition, replicate, genome, mapq = 10, sequenc
               verbose = FALSE),
               mc.cores = C, 
               SIMPLIFY = FALSE)
-  } else stop("Sequencing parameter is not valid.\n Choose one of:", paste(sequencing_values, collapse=','))
-  
+  } else {
+    stop("Sequencing parameter is not valid.\n Choose one of:",
+         paste(sequencing_values, collapse=','))
+  }
   for(i in seq_along(counts)) counts[[i]] <- unlist(as.list(counts[[i]]))
   names(counts) <- names
 
   ##################################################################
-  # get counts from ChIP-seq experiments
+  # Input normalizatrion of the ChIP-seq counts
   ##################################################################
   if(! input.free){
       cat("Normalize histone modifications by Input ...\n")
 
-      if ("Input_All" %in% names(counts)) countsNorm <- lapply( hm_values, function(x) log2((counts[[x]] + 1)/(counts[[paste0("Input_All")]] + 1)))
-      else countsNorm <- lapply( hm_values, function(x) log2((counts[[x]] + 1)/(counts[[paste0("Input_",x)]] + 1)))
-  }else countsNorm <- counts
-
+      if ("Input_All" %in% names(counts)) {
+        countsNorm <- lapply(hm_values, 
+                             function(x) { # Put it in a function girl
+                               log2((counts[[x]] + 1)/(counts[[paste0("Input_All")]] + 1})))
+      } else { 
+        countsNorm <- lapply(hm_values, 
+                             function(x) log2((counts[[x]] + 1)/(counts[[paste0("Input_",x)]] + 1)))
+  } else { 
+    countsNorm <- counts
+  }
   ##################################################################
   # create data matrix for all normalized ChIP-seq experiments
   ##################################################################
   cat("Create summarized data matrix ...\n")
 
-  GenomicRanges::mcols(gr) <-  matrix( unlist(countsNorm), ncol = 3, byrow = FALSE, dimnames = list(NULL, hm_values))
+  GenomicRanges::mcols(gr) <- matrix(unlist(countsNorm), 
+                                      ncol = 3,
+                                      byrow = FALSE,
+                                      dimnames = list(NULL, hm_values))
+                             
   GenomeInfoDb::seqlevels(gr) <- paste0('chr', gsub('chr|Chr','',GenomeInfoDb::seqlevels(gr)))
 
-  n   <- GenomicRanges::mcols(gr)[,"H3K4me1"] + abs(min(GenomicRanges::mcols(gr)[,"H3K4me1"])) + 1
+  n <- GenomicRanges::mcols(gr)[,"H3K4me1"] + abs(min(GenomicRanges::mcols(gr)[,"H3K4me1"])) + 1
   d <- GenomicRanges::mcols(gr)[,"H3K4me3"] + abs(min(GenomicRanges::mcols(gr)[,"H3K4me3"])) + 1
   GenomicRanges::mcols(gr)[,"ratio"] <- log2(n/d)
   
